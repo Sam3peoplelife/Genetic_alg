@@ -74,27 +74,42 @@ def genetic_alg(func, num_gen=50, pop_len=100, cross_prob=0.9, mut_prob=0.1):
     return min_val, avg_val, min_coord
 
 def draw(func):
-    x = np.linspace(-5, -5, 100)
+    x = np.linspace(-5, 5, 100)
     y = np.linspace(-5, 5, 100)
     X, Y = np.meshgrid(x, y)
     Z = np.zeros((100, 100))
     for i in range(100):
         for j in range(100):
             Z[i, j] = func([X[i, j], Y[i, j]])
-
-    # Create the plot
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     ax.plot_surface(X, Y, Z, cmap='plasma')
     ax.set_xlabel('x')
     ax.set_ylabel('y')
     ax.set_zlabel('z')
-    ax.set_title('Bukin Function No. 6')
+    if func == bukin6:
+        ax.set_title('Bukin Function 6')
+    elif func == matyas:
+        ax.set_title('Matyas Function')
+    elif func == schaffer2:
+        ax.set_title('Schaffer Function 2')
     plt.show()
+
 def main_func(func):
     minv, avgv, min_coord = genetic_alg(func)
+    plt.plot(minv, label='min')
+    plt.plot(avgv, label='avg')
+    plt.show()
     print("[x;y] = ",min_coord)
     print("f(x,y) = ", func(min_coord))
 
+print(" Matyas")
+main_func(matyas)
 draw(matyas)
+print("\n Bukin 6")
+main_func(bukin6)
+draw(bukin6)
+print("\n Schaffer 2")
+main_func(schaffer2)
+draw(schaffer2)
 
