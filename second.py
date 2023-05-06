@@ -1,6 +1,8 @@
 import random
 import math
 import matplotlib.pyplot as plt
+import numpy as np
+
 
 def bukin6(x):
     return 100 * math.sqrt(abs(x[1] - 0.01 * x[0]**2)) + 0.01 * abs(x[0] + 10)
@@ -71,11 +73,28 @@ def genetic_alg(func, num_gen=50, pop_len=100, cross_prob=0.9, mut_prob=0.1):
     min_coord = population[fitness_values.index(min(fitness_values))]
     return min_val, avg_val, min_coord
 
+def draw(func):
+    x = np.linspace(-5, -5, 100)
+    y = np.linspace(-5, 5, 100)
+    X, Y = np.meshgrid(x, y)
+    Z = np.zeros((100, 100))
+    for i in range(100):
+        for j in range(100):
+            Z[i, j] = func([X[i, j], Y[i, j]])
 
+    # Create the plot
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.plot_surface(X, Y, Z, cmap='plasma')
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    ax.set_zlabel('z')
+    ax.set_title('Bukin Function No. 6')
+    plt.show()
+def main_func(func):
+    minv, avgv, min_coord = genetic_alg(func)
+    print("[x;y] = ",min_coord)
+    print("f(x,y) = ", func(min_coord))
 
-minv, avgv, min_coord = genetic_alg(matyas)
-print("[x;y] = ",min_coord)
-print("f(x,y) = ", matyas(min_coord))
-plt.plot(minv, label="min")
-plt.plot(avgv, label="average")
-plt.show()
+draw(matyas)
+
