@@ -43,4 +43,9 @@ def cross(parent1, parent2, cross_prob):
     else:
         return parent1, parent2
 
+def mutation(new_gen, mut_prob):
+    for i in new_gen:
+        for coord in i:
+            if random.uniform(0, 1) < mut_prob:
+                new_gen[coord] += np.random.random()
 
