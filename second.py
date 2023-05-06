@@ -34,3 +34,13 @@ def parents(parents, fitness):
         tournament.append(fitness[parent.index()])
     winner = parents[fitness.index(max(fitness))]
     return winner
+
+def cross(parent1, parent2, cross_prob):
+    if random.uniform(0, 1) < cross_prob:
+        child1 = [parent1[0],parent2[1]]
+        child2 = [parent2[0],parent1[1]]
+        return child1, child2
+    else:
+        return parent1, parent2
+
+
