@@ -1,7 +1,6 @@
 import random
 import math
 import matplotlib.pyplot as plt
-import numpy as np
 
 def bukin6(x):
     return 100 * math.sqrt(abs(x[1] - 0.01 * x[0]**2)) + 0.01 * abs(x[0] + 10)
@@ -13,14 +12,13 @@ def schaffer2(x):
     return 0.5 + ((math.sin(x[0]**2 - x[1]**2)**2 - 0.5) / (1 + 0.001 * (x[0]**2 + x[1]**2))**2)
 
 def create_ind():
-    return [random.uniform(-15,15), random.uniform(-15,15)]
+    return [random.uniform(-5,5), random.uniform(-5,5)]
 
-def create_population(pop_len, func):
+def create_population(pop_len):
     population = []
     for _ in range(pop_len):
         population.append(create_ind())
-    first_pop_values = fitness_func(population, func)
-    return population, first_pop_values
+    return population
 
 def fitness_func(population, func):
     fitness = []
@@ -33,13 +31,13 @@ def parents(parents, fitness):
     while len(tournament) != 3:
         parent = random.choice(parents)
         tournament.append(fitness[parents.index(parent)])
-    winner = parents[fitness.index(max(fitness))]
+    winner = parents[fitness.index(min(fitness))]
     return winner
 
 def cross(parent1, parent2, cross_prob):
-    if random.uniform(0, 1) < cross_prob:
-        child1 = [parent1[0],parent2[1]]
-        child2 = [parent2[0],parent1[1]]
+    if random.random() < cross_prob:
+        child1 = [parent1[0], parent2[1]]
+        child2 = [parent2[0], parent1[1]]
         return child1, child2
     else:
         return parent1, parent2
@@ -48,10 +46,11 @@ def mutation(new_gen, mut_prob):
     for i in range(2):
         for j in range(2):
             if random.random() < mut_prob:
-                new_gen[i][j] += np.random.random()
+                new_gen[i][j] += random.uniform(-1, 1)
 
-def genetic_alg(func, num_gen=100, pop_len=50, cross_prob=0.8, mut_prob=0.1):
-    population, fitness_values = create_population(pop_len, func)
+def genetic_alg(func, num_gen=50, pop_len=100, cross_prob=0.9, mut_prob=0.1):
+    population = create_population(pop_len)
+    fitness_values = fitness_func(population, func)
     min_val = []
     avg_val = []
     for i in range(num_gen):
@@ -64,15 +63,19 @@ def genetic_alg(func, num_gen=100, pop_len=50, cross_prob=0.8, mut_prob=0.1):
             offspring.append(child1)
             offspring.append(child2)
         population = offspring
-        fitness_values = fitness_func(population, func)
         avg_fitness = sum(fitness_values) / len(fitness_values)
-        min_val.append(max(fitness_values))
+        min_val.append(min(fitness_values))
         avg_val.append(avg_fitness)
-        print(i+1, "  ", max(fitness_values), " ", avg_fitness, " ")
-    return min_val, avg_val
+        print("Gen:", i+1, " Min:",  min(fitness_values), " Avg:", avg_fitness)
+        fitness_values = fitness_func(population, func)
+    min_coord = population[fitness_values.index(min(fitness_values))]
+    return min_val, avg_val, min_coord
 
-minv, avgv = genetic_alg(matyas)
 
-plt.plot(minv)
-plt.plot(avgv)
+
+minv, avgv, min_coord = genetic_alg(matyas)
+print("[x;y] = ",min_coord)
+print("f(x,y) = ", matyas(min_coord))
+plt.plot(minv, label="min")
+plt.plot(avgv, label="average")
 plt.show()
