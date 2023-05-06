@@ -27,3 +27,10 @@ def fitness_func(population, func):
         fitness.append(func(ind))
     return fitness
 
+def parents(parents, fitness):
+    tournament = []
+    while len(tournament) != 3:
+        parent = random.choice(parents)
+        tournament.append(fitness[parent.index()])
+    winner = parents[fitness.index(max(fitness))]
+    return winner
