@@ -15,11 +15,13 @@ def schaffer2(x):
 def create_ind():
     return [random.uniform(-10,10), random.uniform(-10,10)]
 
-def create_population(pop_len):
+def create_population(pop_len, func):
     population = []
+    first_pop_values = []
     for _ in range(pop_len):
         population.append(create_ind())
-    return population
+    first_pop_values = fitness_func(population, func)
+    return population, first_pop_values
 
 def fitness_func(population, func):
     fitness = []
@@ -49,3 +51,9 @@ def mutation(new_gen, mut_prob):
             if random.uniform(0, 1) < mut_prob:
                 new_gen[coord] += np.random.random()
 
+def genetic_alg(func, num_gen=50, pop_len=100, cross_prob=0.8, mut_prob=0.1):
+    population, fitness_values = create_population(pop_len, func)
+    for i in range(num_gen):
+        offspting = []
+        for j in range(int(len(population)/2)):
+            parent1 = parents(population, fitness_values)
