@@ -13,7 +13,7 @@ def schaffer2(x):
     return 0.5 + ((math.sin(x[0]**2 - x[1]**2)**2 - 0.5) / (1 + 0.001 * (x[0]**2 + x[1]**2))**2)
 
 def create_ind():
-    return [random.uniform(-10,10), random.uniform(-10,10)]
+    return [random.uniform(-15,15), random.uniform(-15,15)]
 
 def create_population(pop_len, func):
     population = []
@@ -33,7 +33,7 @@ def parents(parents, fitness):
     while len(tournament) != 3:
         parent = random.choice(parents)
         tournament.append(fitness[parents.index(parent)])
-    winner = parents[fitness.index(min(fitness))]
+    winner = parents[fitness.index(max(fitness))]
     return winner
 
 def cross(parent1, parent2, cross_prob):
@@ -50,19 +50,29 @@ def mutation(new_gen, mut_prob):
             if random.random() < mut_prob:
                 new_gen[i][j] += np.random.random()
 
-def genetic_alg(func, num_gen=50, pop_len=100, cross_prob=0.8, mut_prob=0.1):
+def genetic_alg(func, num_gen=100, pop_len=50, cross_prob=0.8, mut_prob=0.1):
     population, fitness_values = create_population(pop_len, func)
+    min_val = []
+    avg_val = []
     for i in range(num_gen):
-        offspting = []
-        for j in range(int(len(population)/2)):
+        offspring = []
+        for _ in range(int(len(population)/2)):
             parent1 = parents(population, fitness_values)
             parent2 = parents(population, fitness_values)
             child1, child2 = cross(parent1, parent2, cross_prob)
             mutation([child1, child2], mut_prob)
-            offspting.append(child1)
-            offspting.append(child2)
-        fitness_offspring = fitness_func(offspting, func)
-        avg_fitness = sum(fitness_offspring) / len(fitness_offspring)
-        print(i, "  ", fitness_offspring[0], " ", avg_fitness)
+            offspring.append(child1)
+            offspring.append(child2)
+        population = offspring
+        fitness_values = fitness_func(population, func)
+        avg_fitness = sum(fitness_values) / len(fitness_values)
+        min_val.append(max(fitness_values))
+        avg_val.append(avg_fitness)
+        print(i+1, "  ", max(fitness_values), " ", avg_fitness, " ")
+    return min_val, avg_val
 
-genetic_alg(matyas)
+minv, avgv = genetic_alg(matyas)
+
+plt.plot(minv)
+plt.plot(avgv)
+plt.show()
