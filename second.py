@@ -57,3 +57,8 @@ def genetic_alg(func, num_gen=50, pop_len=100, cross_prob=0.8, mut_prob=0.1):
         offspting = []
         for j in range(int(len(population)/2)):
             parent1 = parents(population, fitness_values)
+            parent2 = parents(population, fitness_values)
+            child1, child2 = cross(parent1, parent2, cross_prob)
+            mutation([child1, child2], mut_prob)
+            offspting.append(child1)
+            offspting.append(child2)
