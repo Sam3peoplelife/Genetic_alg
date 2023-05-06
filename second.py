@@ -21,3 +21,9 @@ def create_population(pop_len):
         population.append(create_ind())
     return population
 
+def fitness_func(population, func):
+    fitness = []
+    for ind in population:
+        fitness.append(func(ind))
+    return fitness
+
