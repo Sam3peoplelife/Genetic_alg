@@ -68,8 +68,9 @@ def genetic_alg(func, num_gen=50, pop_len=100, cross_prob=0.9, mut_prob=0.1):
         avg_fitness = sum(fitness_values) / len(fitness_values)
         min_val.append(min(fitness_values))
         avg_val.append(avg_fitness)
-        print("Gen:", i+1, " Min:",  min(fitness_values), " Avg:", avg_fitness)
         fitness_values = fitness_func(population, func)
+        print("Gen:", i+1, " Min:",  min(fitness_values), " Avg:", avg_fitness)
+
     min_coord = population[fitness_values.index(min(fitness_values))]
     return min_val, avg_val, min_coord
 
@@ -97,8 +98,9 @@ def draw(func):
 
 def main_func(func):
     minv, avgv, min_coord = genetic_alg(func)
-    plt.plot(minv, label='min')
-    plt.plot(avgv, label='avg')
+    plt.plot(minv, label="min")
+    plt.plot(avgv, label="avg")
+    plt.legend()
     plt.show()
     print("[x;y] = ",min_coord)
     print("f(x,y) = ", func(min_coord))
