@@ -17,7 +17,6 @@ def create_ind():
 
 def create_population(pop_len, func):
     population = []
-    first_pop_values = []
     for _ in range(pop_len):
         population.append(create_ind())
     first_pop_values = fitness_func(population, func)
@@ -33,8 +32,8 @@ def parents(parents, fitness):
     tournament = []
     while len(tournament) != 3:
         parent = random.choice(parents)
-        tournament.append(fitness[parent.index()])
-    winner = parents[fitness.index(max(fitness))]
+        tournament.append(fitness[parents.index(parent)])
+    winner = parents[fitness.index(min(fitness))]
     return winner
 
 def cross(parent1, parent2, cross_prob):
@@ -46,10 +45,10 @@ def cross(parent1, parent2, cross_prob):
         return parent1, parent2
 
 def mutation(new_gen, mut_prob):
-    for i in new_gen:
-        for coord in i:
-            if random.uniform(0, 1) < mut_prob:
-                new_gen[coord] += np.random.random()
+    for i in range(2):
+        for j in range(2):
+            if random.random() < mut_prob:
+                new_gen[i][j] += np.random.random()
 
 def genetic_alg(func, num_gen=50, pop_len=100, cross_prob=0.8, mut_prob=0.1):
     population, fitness_values = create_population(pop_len, func)
@@ -62,3 +61,8 @@ def genetic_alg(func, num_gen=50, pop_len=100, cross_prob=0.8, mut_prob=0.1):
             mutation([child1, child2], mut_prob)
             offspting.append(child1)
             offspting.append(child2)
+        fitness_offspring = fitness_func(offspting, func)
+        avg_fitness = sum(fitness_offspring) / len(fitness_offspring)
+        print(i, "  ", fitness_offspring[0], " ", avg_fitness)
+
+genetic_alg(matyas)
