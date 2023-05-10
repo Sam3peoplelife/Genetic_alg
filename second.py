@@ -64,13 +64,13 @@ def genetic_alg(func, num_gen=50, pop_len=100, cross_prob=0.9, mut_prob=0.1):
             mutation([child1, child2], mut_prob)
             offspring.append(child1)
             offspring.append(child2)
-        population = offspring
         avg_fitness = sum(fitness_values) / len(fitness_values)
         min_val.append(min(fitness_values))
         avg_val.append(avg_fitness)
-        fitness_values = fitness_func(population, func)
         print("Gen:", i+1, " Min:",  min(fitness_values), " Avg:", avg_fitness)
-
+        population = offspring
+        fitness_values = fitness_func(population, func)
+    avg_val = sorted(avg_val, reverse=True)
     min_coord = population[fitness_values.index(min(fitness_values))]
     return min_val, avg_val, min_coord
 
